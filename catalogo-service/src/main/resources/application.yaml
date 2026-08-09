@@ -55,6 +55,13 @@ jwt:
   expiration: 3600000 # 1 hora en milisegundos
 
 # ============================================
+# USER SERVICE CLIENT
+# ============================================
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://localhost:8081}
+
+# ============================================
 # ACTUATOR (Para health checks de Kubernetes)
 # ============================================
 management:

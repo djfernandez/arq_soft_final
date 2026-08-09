@@ -1,6 +1,6 @@
     -- ============================================
     -- Migration: V1__CREATE_TABLES.sql
-    -- Database: productdb (Docker container: postgres-product)
+    -- Database: Catalogdb (Docker container: postgres-catalog)
     -- ============================================
 
     -- Función para auto-actualizar updated_at
