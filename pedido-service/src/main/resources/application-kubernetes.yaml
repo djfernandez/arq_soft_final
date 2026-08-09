@@ -12,14 +12,14 @@ server:
 
 spring:
   application:
-    name: pedido-service
+    name: order-service
 
   # ============================================
   # DATASOURCE CONFIGURATION
   # ============================================
   # Estas variables vienen de ConfigMap y Secrets de Kubernetes
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5435/userdb}
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/orderdb}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

@@ -1,0 +1,12 @@
+# ============================================
+# NAMESPACE
+# ============================================
+# Agrupa recursos relacionados
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: catalogs-service
+  labels:
+    name: catalogs-service
+    environment: local

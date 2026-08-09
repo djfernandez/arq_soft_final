@@ -20,7 +20,7 @@ spring:
   # Estas variables vienen de ConfigMap y Secrets de Kubernetes
   datasource:
     url: jdbc:postgresql://localhost:5434/userdb
-    username:  ${DB_USERNAME:postgres}
+    username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
@@ -52,7 +52,7 @@ spring:
 # ============================================
 jwt:
   secret: ${JWT_SECRET:m1S3cr3tK3yJWT_T3csup2025!@#SecureToken}
-  expiration: 3600000  # 1 hora en milisegundos
+  expiration: 3600000 # 1 hora en milisegundos
 
 # ============================================
 # ACTUATOR (Para health checks de Kubernetes)
@@ -61,7 +61,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus    # ← Agregar prometheus
+        include: health,info,metrics,prometheus # ← Agregar prometheus
   endpoint:
     health:
       probes:
@@ -81,7 +81,7 @@ management:
   # Trazas distribuidas
   tracing:
     sampling:
-      probability: 1.0        # 1.0 = 100% de trazas (solo para desarrollo)
+      probability: 1.0 # 1.0 = 100% de trazas (solo para desarrollo)
       # En producción usar 0.1 (10%)
   # Tags comunes en todas las métricas
   metrics:
@@ -89,7 +89,7 @@ management:
       application: ${spring.application.name}
     distribution:
       percentiles-histogram:
-        http.server.requests: true    # Habilitar histograma de latencia
+        http.server.requests: true # Habilitar histograma de latencia
 
 # Zipkin endpoint
 management.zipkin.tracing:
@@ -102,5 +102,5 @@ logging:
   pattern:
     level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"
   level:
-    com.tecsup.app.micro.user: ${LOG_LEVEL:INFO}
-    org.hibernate.SQL: ${SQL_LOG_LEVEL:WARN}
+    "[com.tecsup.app.micro.user]": ${LOG_LEVEL:INFO}
+    "[org.hibernate.SQL]": ${SQL_LOG_LEVEL:WARN}
