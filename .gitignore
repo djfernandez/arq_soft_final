@@ -33,4 +33,4 @@ replay_pid*
 *.log
 
 ### TSDB ###
-observability/prometheus/data
+/observability/prometheus/data/
