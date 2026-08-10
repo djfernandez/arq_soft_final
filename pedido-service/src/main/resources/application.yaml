@@ -12,7 +12,7 @@ server:
 
 spring:
   application:
-    name: pedido-service
+    name: order-service
 
   # ============================================
   # DATASOURCE CONFIGURATION
@@ -53,6 +53,20 @@ spring:
 jwt:
   secret: ${JWT_SECRET:m1S3cr3tK3yJWT_T3csup2025!@#SecureToken}
   expiration: 3600000 # 1 hora en milisegundos
+
+# ============================================
+# USER SERVICE CLIENT
+# ============================================
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://localhost:8081}
+
+# ============================================
+# CATALOG SERVICE CLIENT
+# ============================================
+catalog:
+  service:
+    url: ${CATALOG_SERVICE_URL:http://localhost:8082}
 
 # ============================================
 # ACTUATOR (Para health checks de Kubernetes)

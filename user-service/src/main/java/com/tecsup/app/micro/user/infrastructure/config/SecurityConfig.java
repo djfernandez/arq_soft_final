@@ -37,103 +37,103 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // =============================================
-    // Descomentar para Sesión 2 (JWT)
-    // =============================================
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  // =============================================
+  // Descomentar para Sesión 2 (JWT)
+  // =============================================
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public SecurityFilterChain userServiceSecurity(HttpSecurity http) throws Exception {
-        http
-                // Deshabilitar CSRF (no necesario en APIs REST stateless)
-                .csrf(csrf -> csrf.disable())
+  @Bean
+  public SecurityFilterChain userServiceSecurity(HttpSecurity http) throws Exception {
+    http
+        // Deshabilitar CSRF (no necesario en APIs REST stateless)
+        .csrf(csrf -> csrf.disable())
 
-                // Política de sesión: STATELESS (sin estado en servidor)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // Política de sesión: STATELESS (sin estado en servidor)
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Reglas de autorización por URL
-                .authorizeHttpRequests(auth -> auth
+        // Reglas de autorización por URL
+        .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html")
-                        .permitAll()
-                        // Endpoints públicos
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/health").permitAll()
-                        // .requestMatchers("/actuator/health/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll() // Permitir todos los actuator
+            .requestMatchers(
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html")
+            .permitAll()
+            // Endpoints públicos
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/users/health").permitAll()
+            // .requestMatchers("/actuator/health/**").permitAll()
+            .requestMatchers("/actuator/**").permitAll() // Permitir todos los actuator
 
-                        // Solo ADMIN puede gestionar usuarios
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+            // Solo ADMIN puede gestionar usuarios
+            .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                        // Todo lo demás requiere autenticación
-                        .anyRequest()
-                        .authenticated())
+            // Todo lo demás requiere autenticación
+            .anyRequest()
+            .authenticated())
 
-                // =============================================
-                // Sesión 1: HTTP Basic (comentar en Sesión 2)
-                // =============================================
-                // .httpBasic(basic -> basic
-                // .authenticationEntryPoint((request, response, authException) -> {
-                // response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                // response.setContentType("application/json");
-                // response.getWriter().write(
-                // """
-                // {
-                // "error" : "No autenticado",
-                // "status" : 401,
-                // "message": "Debes autenticarte para acceder a este recurso"
-                // }
-                // """);
-                // })
-                // )
+        // =============================================
+        // Sesión 1: HTTP Basic (comentar en Sesión 2)
+        // =============================================
+        // .httpBasic(basic -> basic
+        // .authenticationEntryPoint((request, response, authException) -> {
+        // response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        // response.setContentType("application/json");
+        // response.getWriter().write(
+        // """
+        // {
+        // "error" : "No autenticado",
+        // "status" : 401,
+        // "message": "Debes autenticarte para acceder a este recurso"
+        // }
+        // """);
+        // })
+        // )
 
-                // =============================================
-                // Sesión 2: JWT (descomentar y comentar httpBasic)
-                // =============================================
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        // =============================================
+        // Sesión 2: JWT (descomentar y comentar httpBasic)
+        // =============================================
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // Manejo de errores de autorización (403)
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                            response.setContentType("application/json");
-                            response.getWriter().write(
-                                    """
-                                             {
-                                                 "error": "No autenticado",
-                                                 "status": 401,
-                                                 "message": "Debes autenticarte para acceder a este recurso"
-                                             }
-                                            """);
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                            response.setContentType("application/json");
-                            response.getWriter().write(
-                                    """
-                                              {
-                                                  "error"   : "Acceso denegado",
-                                                  "status"  : 403,
-                                                  "message" : "No tienes permisos para acceder a este recurso"
-                                              }
-                                            """);
-                        }));
+        // Manejo de errores de autorización (403)
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.setStatus(HttpStatus.UNAUTHORIZED.value());
+              response.setContentType("application/json");
+              response.getWriter().write(
+                  """
+                       {
+                           "error": "No autenticado",
+                           "status": 401,
+                           "message": "Debes autenticarte para acceder a este recurso"
+                       }
+                      """);
+            })
+            .accessDeniedHandler((request, response, accessDeniedException) -> {
+              response.setStatus(HttpStatus.FORBIDDEN.value());
+              response.setContentType("application/json");
+              response.getWriter().write(
+                  """
+                        {
+                            "error"   : "Acceso denegado",
+                            "status"  : 403,
+                            "message" : "No tienes permisos para acceder a este recurso"
+                        }
+                      """);
+            }));
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
 }

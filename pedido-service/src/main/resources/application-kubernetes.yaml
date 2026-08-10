@@ -48,6 +48,20 @@ spring:
     show-sql: ${SHOW_SQL:false}
 
 # ============================================
+# USER SERVICE CLIENT
+# ============================================
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://localhost:8081}
+
+# ============================================
+# CATALOG SERVICE CLIENT
+# ============================================
+catalog:
+  service:
+    url: ${CATALOG_SERVICE_URL:http://localhost:8082}
+
+# ============================================
 # ACTUATOR (Para health checks de Kubernetes)
 # ============================================
 management:

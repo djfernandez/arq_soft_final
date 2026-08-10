@@ -1,34 +1,40 @@
+package com.tecsup.app.micro.pedido.infrastructure.config;
 
-package com.tecsup.app.micro.user.infrastructure.config;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.tecsup.app.micro.user.infrastructure.security.CustomUserDetailsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 /**
- * Filtro JWT que intercepta cada petición HTTP
+ * Filtro JWT para product-service
  *
- * Paquete: com.tecsup.app.micro.user.infrastructure.config
+ * Paquete: com.tecsup.app.micro.product.infrastructure.config
  * Sesión 2 - Módulo 4: OAuth 2.0 y JWT
  *
+ * DIFERENCIA con user-service:
+ * - user-service: carga el usuario desde BD (CustomUserDetailsService)
+ * - product-service: lee los roles DIRECTAMENTE del JWT (no tiene BD de
+ * usuarios)
+ *
  * Flujo:
- * 1. Extrae el token del header Authorization: Bearer <token>
- * 2. Valida el token con JwtTokenProvider
- * 3. Carga el usuario desde BD con CustomUserDetailsService
- * 4. Establece la autenticación en el SecurityContext
+ * 1. Extrae token del header Authorization: Bearer <token>
+ * 2. Valida el token con JwtTokenProvider (misma clave secreta)
+ * 3. Extrae email y roles del JWT
+ * 4. Crea la autenticación sin consultar BD
  */
 @Component
 @RequiredArgsConstructor
@@ -36,7 +42,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
-  private final CustomUserDetailsService customUserDetailsService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request,
@@ -47,14 +52,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
       String email = jwtTokenProvider.getEmailFromToken(token);
-      log.debug("JWT válido para usuario: {}", email);
+      List<String> roles = jwtTokenProvider.getRolesFromToken(token);
 
-      UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+      log.debug("JWT válido para: {} con roles: {}", email, roles);
 
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-          userDetails,
-          null,
-          userDetails.getAuthorities());
+      // Crear authorities desde los roles del JWT (sin consultar BD)
+      List<SimpleGrantedAuthority> authorities = roles.stream()
+          .map(SimpleGrantedAuthority::new)
+          .collect(Collectors.toList());
+
+      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null,
+          authorities);
 
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -63,10 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  /**
-   * Extrae el token JWT del header Authorization
-   * Formato esperado: Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
-   */
   private String extractTokenFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

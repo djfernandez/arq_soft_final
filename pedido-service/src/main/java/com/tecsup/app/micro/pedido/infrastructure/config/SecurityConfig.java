@@ -1,5 +1,6 @@
-package com.tecsup.app.micro.catalogo.infrastructure.config;
+package com.tecsup.app.micro.pedido.infrastructure.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,8 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Configuración de Spring Security para product-service
  *
@@ -22,15 +21,15 @@ import lombok.RequiredArgsConstructor;
  * valida)
  *
  * Endpoints:
- * GET /api/products → público
- * GET /api/products/available → público
- * GET /api/products/{id} → público
- * GET /api/products/user/{userId} → autenticado
- * POST /api/products → ADMIN
- * PUT /api/products/{id} → ADMIN
- * DELETE /api/products/{id} → ADMIN
+ * GET /api/orders → público
+ * GET /api/orders/available → público
+ * GET /api/orders/{id} → público
+ * GET /api/orders/user/{userId} → autenticado
+ * POST /api/orders → ADMIN
+ * PUT /api/orders/{id} → ADMIN
+ * DELETE /api/orders/{id} → ADMIN
  * POST /api/orders → autenticado (Sesión 3)
- * GET /api/products/health → público
+ * GET /api/orders/health → público
  * Actuator /actuator/health → público
  */
 @Configuration
@@ -52,26 +51,23 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
         .authorizeHttpRequests(auth -> auth
+
             .requestMatchers(
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html")
             .permitAll()
             // Endpoints públicos (lectura de productos)
-            .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/available").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/health").permitAll()
-            // .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/{id}").hasRole("ADMIN") // .permitAll() //
-                                                                                    // CAMBIO
-
-            // .requestMatchers("/actuator/health/**").permitAll()
-            .requestMatchers("/actuator/**").permitAll() // Permitir todos los actuator
+            .requestMatchers(HttpMethod.GET, "/api/orders").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/orders/available").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/orders/health").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/orders/{id}").permitAll()
+            .requestMatchers("/actuator/health/**").permitAll()
 
             // Solo ADMIN puede crear, actualizar, eliminar productos
-            .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/orders").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasRole("ADMIN")
 
             // Todo lo demás requiere autenticación
             .anyRequest().authenticated())
@@ -105,6 +101,7 @@ public class SecurityConfig {
                        }
                   """);
             }));
+
     return http.build();
   }
 }
