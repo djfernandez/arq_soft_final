@@ -34,8 +34,6 @@ public class GetCatalogsByUserUseCase {
 
         log.info("Fetching products for user from userdb: {}", user.getName());
 
-        // TODO : Validar existencia de usuario o lanzar excepcion
-
         log.debug("Executing GetCatalogsByUserUseCase for userId: {}", userId);
         return productRepository.findByCreatedBy(userId);
     }

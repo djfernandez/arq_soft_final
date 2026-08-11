@@ -1,13 +1,22 @@
 package com.tecsup.app.micro.catalogo.application.service;
 
-import com.tecsup.app.micro.catalogo.application.usecase.*;
-import com.tecsup.app.micro.catalogo.domain.model.Catalog;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.tecsup.app.micro.catalogo.application.usecase.CreateCatalogUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.DeleteCatalogUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.GetAllCatalogsIdsUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.GetAllCatalogsUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.GetAvailableCatalogsUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.GetCatalogByIdUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.GetCatalogsByUserUseCase;
+import com.tecsup.app.micro.catalogo.application.usecase.UpdateCatalogUseCase;
+import com.tecsup.app.micro.catalogo.domain.model.Catalog;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Servicio de Aplicación de Producto
@@ -25,6 +34,7 @@ public class CatalogApplicationService {
     private final CreateCatalogUseCase createCatalogUseCase;
     private final UpdateCatalogUseCase updateCatalogUseCase;
     private final DeleteCatalogUseCase deleteCatalogUseCase;
+    private final GetAllCatalogsIdsUseCase getAllCatalogsIdsUseCase;
 
     @Transactional(readOnly = true)
     public List<Catalog> getAllCatalogs() {
@@ -64,5 +74,10 @@ public class CatalogApplicationService {
     @Transactional
     public void deleteCatalog(Long id) {
         deleteCatalogUseCase.execute(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Catalog> getCatalogsByIds(List<Long> ids) {
+        return getAllCatalogsIdsUseCase.execute(ids);
     }
 }

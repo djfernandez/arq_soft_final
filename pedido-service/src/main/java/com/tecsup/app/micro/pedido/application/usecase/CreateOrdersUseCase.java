@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CreateOrdertUseCase {
+public class CreateOrdersUseCase {
 
   private final OrderRepository orderRepository;
   private final UserClient userClient;

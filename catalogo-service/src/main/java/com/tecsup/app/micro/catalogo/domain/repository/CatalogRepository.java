@@ -52,4 +52,9 @@ public interface CatalogRepository {
      * Verifica si existe un producto con el ID dado
      */
     boolean existsById(Long id);
+
+    /**
+     * Obtiene todos los productos
+     */
+    List<Catalog> findAllById(List<Long> ids);
 }

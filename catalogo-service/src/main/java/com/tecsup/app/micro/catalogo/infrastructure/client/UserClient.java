@@ -41,7 +41,7 @@ public class UserClient {
     private final RestTemplate restTemplate;
     private final UserDtoMapper userDTOMapper;
 
-    @Value("${user.service.url:http://localhost:8081}")
+    @Value("${user.service.url}")
     private String userServiceUrl;
 
     /**

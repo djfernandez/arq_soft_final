@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tecsup.app.micro.catalogo.application.service.CatalogApplicationService;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * Controlador REST de Catálogos
  */
 @RestController
-@RequestMapping("/api/Catalogs")
+@RequestMapping("/api/catalogs")
 @RequiredArgsConstructor
 @Slf4j
 public class CatalogController {
@@ -58,19 +59,6 @@ public class CatalogController {
         return ResponseEntity.ok(catalogDtoMapper.toResponseList(catalogs));
     }
 
-    /**
-     * Obtiene un catálogo por ID
-     */
-    /*
-     * @GetMapping("/{id}")
-     * public ResponseEntity<CatalogResponse> getCatalogById(@PathVariable Long id)
-     * {
-     * log.info("REST request to get catalog by id: {}", id);
-     * Catalog catalog = catalogApplicationService.getCatalogById(id);
-     * return ResponseEntity.ok(catalogDtoMapper.toResponse(catalog));
-     * }
-     */
-
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CatalogResponse> getCatalogById(@PathVariable Long id,
@@ -89,6 +77,17 @@ public class CatalogController {
 
         Catalog catalog = catalogApplicationService.getCatalogById(id, jwtToken);
         return ResponseEntity.ok(catalogDtoMapper.toResponse(catalog));
+    }
+
+    /**
+     * Obtiene los catálogos por IDs (público)
+     */
+    @GetMapping("/ids")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<CatalogResponse>> getCatalogsByIds(@RequestParam List<Long> ids) {
+        log.info("REST request to get catalogs by ids: {}", ids);
+        List<Catalog> catalogs = catalogApplicationService.getCatalogsByIds(ids);
+        return ResponseEntity.ok(catalogDtoMapper.toResponseList(catalogs));
     }
 
     /**

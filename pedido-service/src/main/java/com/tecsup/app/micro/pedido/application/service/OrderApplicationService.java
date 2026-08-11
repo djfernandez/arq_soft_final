@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tecsup.app.micro.pedido.application.usecase.CreateOrdertUseCase;
+import com.tecsup.app.micro.pedido.application.usecase.CreateOrdersUseCase;
 import com.tecsup.app.micro.pedido.application.usecase.GetAllOrdersUseCase;
 import com.tecsup.app.micro.pedido.application.usecase.GetMaxOrdersUseCase;
 import com.tecsup.app.micro.pedido.domain.model.Order;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderApplicationService {
 
-  private final CreateOrdertUseCase createOrderUseCase;
+  private final CreateOrdersUseCase createOrderUseCase;
   private final GetAllOrdersUseCase getAllOrdersUseCase;
   private final GetMaxOrdersUseCase getMaxOrdersUseCase;
 

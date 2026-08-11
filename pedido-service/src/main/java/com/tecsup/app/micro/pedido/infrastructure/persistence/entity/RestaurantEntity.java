@@ -1,18 +1,14 @@
 package com.tecsup.app.micro.pedido.infrastructure.persistence.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -23,32 +19,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "restaurants")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderEntity {
+public class RestaurantEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "restaurant_id", nullable = false)
-  private RestaurantEntity restaurant;
+  @Column(name = "name", nullable = false, length = 100)
+  private String name;
 
-  @Column(name = "order_number", nullable = false, unique = true, length = 50)
-  private String orderNumber;
+  @Column(name = "description", nullable = false, length = 255)
+  private String description;
 
-  @Column(name = "user_id", nullable = false)
+  @Column(name = "created_by", nullable = false)
   private Long userId;
-
-  @Column(name = "status", nullable = false)
-  private String status;
-
-  @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
-  private BigDecimal totalAmount;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
@@ -56,9 +45,9 @@ public class OrderEntity {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  // Relación con OrderItem
-  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OrderItemEntity> items;
+  // Relación con Orders
+  @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OrderEntity> orders;
 
   @PrePersist
   protected void onCreate() {

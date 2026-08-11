@@ -12,15 +12,39 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+CREATE TABLE IF NOT EXISTS restaurants (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    description TEXT,    
+    created_by BIGINT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_name_not_empty CHECK (LENGTH(TRIM(name)) > 0)    
+);
+
+-- Trigger para actualizar updated_at
+CREATE TRIGGER update_restaurants_updated_at
+    BEFORE UPDATE ON restaurants
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Comentarios
+  COMMENT ON TABLE restaurants IS 'Catálogos del sistema - DB en Docker';
+  COMMENT ON COLUMN restaurants.created_by IS 'Usuario creador (ref. lógica a userdb.users.id en otro contenedor)';
+
 CREATE TABLE IF NOT EXISTS orders (
     id BIGSERIAL PRIMARY KEY,
     order_number VARCHAR(50) NOT NULL UNIQUE,
+    restaurant_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
     total_amount NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
+    CONSTRAINT fk_restaurant FOREIGN KEY (restaurant_id) 
+        REFERENCES restaurants(id) ON DELETE CASCADE,
     CONSTRAINT chk_status CHECK (status IN ('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED')),
     CONSTRAINT chk_total_positive CHECK (total_amount >= 0)
 );
