@@ -29,6 +29,26 @@
       "projectName": "catalogo-service",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-PagoServiceApplication<pago-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.tecsup.app.micro.pago.PagoServiceApplication",
+      "projectName": "pago-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-EntregaServiceApplication<entrega-service>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.tecsup.app.micro.entrega.EntregaServiceApplication",
+      "projectName": "entrega-service",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }

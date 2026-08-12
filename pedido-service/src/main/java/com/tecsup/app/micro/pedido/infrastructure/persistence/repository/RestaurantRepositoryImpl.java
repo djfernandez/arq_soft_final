@@ -39,13 +39,11 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 
   @Override
   public List<Restaurant> findByUserId(Long userId) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'findByUserId'");
   }
 
   @Override
   public List<Restaurant> findAvailableRestaurants() {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'findAvailableRestaurants'");
   }
 
@@ -59,19 +57,16 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 
   @Override
   public void deleteById(Long id) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
   }
 
   @Override
   public boolean existsById(Long id) {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'existsById'");
   }
 
   @Override
   public Long maxOrderNumber() {
-    // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'maxOrderNumber'");
   }
 

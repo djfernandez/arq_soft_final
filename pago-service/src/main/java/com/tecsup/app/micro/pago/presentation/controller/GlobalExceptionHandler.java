@@ -11,8 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.tecsup.app.micro.pago.domain.exception.InvalidCatalogDataException;
-import com.tecsup.app.micro.pago.domain.exception.CatalogNotFoundException;
+import com.tecsup.app.micro.pago.domain.exception.InvalidPaymentDataException;
+import com.tecsup.app.micro.pago.domain.exception.PaymentNotFoundException;
 import com.tecsup.app.micro.pago.domain.exception.UserServiceException;
 
 import lombok.AllArgsConstructor;
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
     /**
      * Maneja ProductNotFoundException
      */
-    @ExceptionHandler(CatalogNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFoundException(CatalogNotFoundException ex) {
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(PaymentNotFoundException ex) {
         log.error("Product not found: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
@@ -42,8 +42,8 @@ public class GlobalExceptionHandler {
     /**
      * Maneja InvalidProductDataException
      */
-    @ExceptionHandler(InvalidCatalogDataException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidProductDataException(InvalidCatalogDataException ex) {
+    @ExceptionHandler(InvalidPaymentDataException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidProductDataException(InvalidPaymentDataException ex) {
         log.error("Invalid product data: {}", ex.getMessage());
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),

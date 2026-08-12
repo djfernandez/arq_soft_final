@@ -1,0 +1,109 @@
+# ============================================
+# DEPLOYMENT - Gestión de Pods
+# ============================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-service
+  namespace: orders-service
+  labels:
+    app: orders-service
+
+spec:
+  # ========================================
+  # Número de réplicas (copias)
+  # ========================================
+  replicas: 1 # Empezamos con 1 pod
+
+  # ========================================
+  # Selector: ¿Qué pods gestionar?
+  # ========================================
+  selector:
+    matchLabels:
+      app: orders-service
+
+  # ========================================
+  # Template: Cómo crear cada pod
+  # ========================================
+  template:
+    metadata:
+      labels:
+        app: orders-service
+
+    spec:
+      containers:
+        - name: orders-service
+
+          # Imagen Docker
+          image: orders-service:1.0
+
+          # imagePullPolicy:
+          # - Never: Solo usar imagen local (desarrollo)
+          # - Always: Siempre descargar (producción)
+          # - IfNotPresent: para local en Docker Desktop, si no está local, la descarga (desarrollo)
+          imagePullPolicy: Always
+
+          # Puerto del contenedor
+          ports:
+            - containerPort: 8083
+              name: http
+
+          # ====================================
+          # VARIABLES DE ENTORNO
+          # ====================================
+          env:
+            # Spring profile
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+
+            # Desde ConfigMap
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: USER_SERVICE_URL
+
+            # Desde ConfigMap
+            - name: CATALOG_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: CATALOG_SERVICE_URL
+
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: DB_URL
+
+            - name: DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: DDL_AUTO
+
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: LOG_LEVEL
+
+            - name: JAVA_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-service-config
+                  key: JAVA_OPTS
+
+            # Desde Secret
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: orders-service-secret
+                  key: DB_USERNAME
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: orders-service-secret
+                  key: DB_PASSWORD

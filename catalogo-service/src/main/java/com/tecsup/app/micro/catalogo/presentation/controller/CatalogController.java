@@ -43,6 +43,7 @@ public class CatalogController {
      * Obtiene todos los catálogos
      */
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CatalogResponse>> getAllCatalogs() {
         log.info("REST request to get all catalogs");
         List<Catalog> catalogs = catalogApplicationService.getAllCatalogs();

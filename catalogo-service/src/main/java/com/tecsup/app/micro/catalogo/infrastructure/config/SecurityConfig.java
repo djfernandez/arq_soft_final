@@ -58,20 +58,18 @@ public class SecurityConfig {
                 "/swagger-ui.html")
             .permitAll()
             // Endpoints públicos (lectura de productos)
-            .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/available").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/health").permitAll()
-            // .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/products/{id}").hasRole("ADMIN") // .permitAll() //
-                                                                                    // CAMBIO
+            .requestMatchers(HttpMethod.GET, "/api/catalogs").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/catalogs/available").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/catalogs/health").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/catalogs/{id}").hasRole("ADMIN") // .permitAll()
 
             // .requestMatchers("/actuator/health/**").permitAll()
             .requestMatchers("/actuator/**").permitAll() // Permitir todos los actuator
 
             // Solo ADMIN puede crear, actualizar, eliminar productos
-            .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/catalogs").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/catalogs/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/catalogs/**").hasRole("ADMIN")
 
             // Todo lo demás requiere autenticación
             .anyRequest().authenticated())

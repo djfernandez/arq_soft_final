@@ -38,11 +38,11 @@ public interface CatalogDtoMapper {
     /**
      * Convierte Product de dominio a ProductResponse
      */
-    @Mapping(target = "available", expression = "java(product.isAvailable())")
-    CatalogResponse toResponse(Catalog product);
+    @Mapping(target = "available", expression = "java(catalog.isAvailable())")
+    CatalogResponse toResponse(Catalog catalog);
 
     /**
      * Convierte lista de Products a lista de ProductResponse
      */
-    List<CatalogResponse> toResponseList(List<Catalog> products);
+    List<CatalogResponse> toResponseList(List<Catalog> catalogs);
 }

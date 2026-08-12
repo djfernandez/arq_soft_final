@@ -26,24 +26,24 @@ public class GetCatalogByIdUseCase {
     public Catalog execute(Long id, String jwtToken) { // NUEVO PARAMETRO
         log.debug("Executing GetProductByIdUseCase for id: {}", id);
 
-        Catalog prod = productRepository.findById(id)
+        Catalog catalog = productRepository.findById(id)
                 .orElseThrow(() -> new CatalogNotFoundException(id));
 
         // --------------------------------------------------------
         // Llama al microservicio user-service
         // --------------------------------------------------------
         // Validar que el usuario existe en userdb
-        User user = userClient.getUserById(prod.getCreatedBy(), jwtToken); // NUEVO PARAMETRO
+        User user = userClient.getUserById(catalog.getCreatedBy(), jwtToken); // NUEVO PARAMETRO
         log.info("Fetching user from userdb: {}", user);
 
         if (user == null) {
-            log.warn("User with id {} not found in userdb", prod.getCreatedBy());
+            log.warn("User with id {} not found in userdb", catalog.getCreatedBy());
             throw new UserNotFoundException(id);
         }
 
-        prod.setCreatedByUser(user);
+        catalog.setCreatedByUser(user);
 
-        return prod;
+        return catalog;
     }
 
 }
