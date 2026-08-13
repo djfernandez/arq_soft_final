@@ -105,7 +105,7 @@ management:
     # Configuración de Zipkin para trazas distribuidas
     export:
       zipkin:
-        endpoint: "http://localhost:9411/api/v2/spans"
+        endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
   # Tags comunes en todas las métricas
   metrics:
     tags:

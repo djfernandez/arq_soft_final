@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.tecsup.app.micro.pedido.domain.model.Catalog;
 import com.tecsup.app.micro.pedido.infrastructure.client.dto.CatalogDTO;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
