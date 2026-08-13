@@ -96,7 +96,7 @@ public class PaymentController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PaymentResponse> createPayment(@Valid @RequestBody CreatePaymentRequest request,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        log.info("REST request to create payment: {}", request.getName());
+        log.info("REST request to create payment: {}", request.getUserId());
         // Extraer JWT del header
         String jwtToken = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

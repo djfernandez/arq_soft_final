@@ -53,13 +53,13 @@ public class DeliveryApplicationService {
     }
 
     @Transactional
-    public Delivery createCatalog(Delivery product) {
-        return createCatalogUseCase.execute(product);
+    public Delivery createCatalog(Delivery delivery, String jwtToken) {
+        return createCatalogUseCase.execute(delivery, jwtToken);
     }
 
     @Transactional
-    public Delivery updateCatalog(Long id, Delivery product) {
-        return updateCatalogUseCase.execute(id, product);
+    public Delivery updateCatalog(Long id, Delivery delivery) {
+        return updateCatalogUseCase.execute(id, delivery);
     }
 
     @Transactional

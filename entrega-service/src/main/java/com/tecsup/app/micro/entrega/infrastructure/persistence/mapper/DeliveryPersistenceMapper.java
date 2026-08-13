@@ -17,7 +17,6 @@ public interface DeliveryPersistenceMapper {
     /**
      * Convierte ProductEntity a Product de dominio
      */
-    @Mapping(target = "deliveredAt", ignore = true)
     @Mapping(target = "createdByUser", ignore = true)
     Delivery toDomain(DeliveryEntity entity);
 

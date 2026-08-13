@@ -1,12 +1,10 @@
 package com.tecsup.app.micro.pago.presentation.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,22 +19,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreatePaymentRequest {
 
-    @NotBlank(message = "Name is required")
-    @Size(max = 200, message = "Name must not exceed 200 characters")
-    private String name;
+    @NotNull(message = "User ID is required")
+    private Long userId;
 
-    private String description;
+    @NotNull(message = "Order ID is required")
+    private Long orderId;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", message = "Price must be positive or zero")
-    private BigDecimal price;
+    @NotNull(message = "Amount is required")
+    @DecimalMin(value = "0.0", message = "Amount must be positive or zero")
+    private BigDecimal amount;
 
-    @NotNull(message = "Stock is required")
-    @Min(value = 0, message = "Stock must be non-negative")
-    private Integer stock;
+    @NotNull(message = "Status is required")
+    private String status;
 
-    @Size(max = 50, message = "Category must not exceed 50 characters")
-    private String category;
+    @NotNull
+    private LocalDateTime paidAt;
 
-    private Long createdBy;
 }

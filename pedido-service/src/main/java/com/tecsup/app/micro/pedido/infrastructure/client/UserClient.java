@@ -56,9 +56,9 @@ public class UserClient {
    *                  abre el circuito por 10 segundos
    * @Retry: Reintenta hasta 3 veces con 1 segundo entre intentos
    */
-  @CircuitBreaker(name = "userService")
-  @Retry(name = "userService", fallbackMethod = "getUserFallback")
-  public UserDTO getUserById(Long userId, String jwtToken) {
+  @CircuitBreaker(name = "pedidoService")
+  @Retry(name = "pedidoService", fallbackMethod = "getUserFallback")
+  public User getUserById(Long userId, String jwtToken) {
     log.info("Calling User Service (PostgreSQL userdb) to get user with id: {}", userId);
 
     String url = this.userServiceUrl + "/api/users/" + userId;
@@ -100,7 +100,7 @@ public class UserClient {
    * Metodo de versión anterior (sin JWT) - mantener para compatibilidad
    * Se puede eliminar una vez que JWT esté completamente implementado
    */
-  public UserDTO getUserById(Long userId) {
+  public User getUserById(Long userId) {
     return getUserById(userId, null);
   }
 

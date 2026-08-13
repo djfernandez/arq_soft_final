@@ -22,19 +22,12 @@ import java.math.BigDecimal;
 public class UpdatePaymentRequest {
 
     @NotBlank(message = "Name is required")
-    @Size(max = 200, message = "Name must not exceed 200 characters")
-    private String name;
+    private Long id;
 
-    private String description;
+    @NotBlank(message = "Name is required")
+    private Long userId;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", message = "Price must be positive or zero")
-    private BigDecimal price;
+    @NotBlank(message = "Name is required")
+    private Long orderId;
 
-    @NotNull(message = "Stock is required")
-    @Min(value = 0, message = "Stock must be non-negative")
-    private Integer stock;
-
-    @Size(max = 50, message = "Category must not exceed 50 characters")
-    private String category;
 }

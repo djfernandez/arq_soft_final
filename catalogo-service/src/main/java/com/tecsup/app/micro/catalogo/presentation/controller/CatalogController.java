@@ -117,10 +117,21 @@ public class CatalogController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CatalogResponse> createCatalog(@Valid @RequestBody CreateCatalogRequest request) {
+    public ResponseEntity<CatalogResponse> createCatalog(
+            @Valid @RequestBody CreateCatalogRequest request,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
         log.info("REST request to create catalog: {}", request.getName());
+
+        // Extraer JWT del header
+        String jwtToken = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwtToken = authHeader.substring(7);
+        } else {
+            log.warn("No Authorization header with Bearer token found for catalog retrieval");
+        }
+
         Catalog catalog = catalogDtoMapper.toDomain(request);
-        Catalog createdCatalog = catalogApplicationService.createCatalog(catalog);
+        Catalog createdCatalog = catalogApplicationService.createCatalog(catalog, jwtToken);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(catalogDtoMapper.toResponse(createdCatalog));
     }

@@ -90,7 +90,26 @@ order:
     url: ${ORDER_SERVICE_URL:http://localhost:8083}
 
 # ============================================
-# ACTUATOR (Para health checks de Kubernetes)
+# RESILIENCE4J (Sesión 3)
+# ============================================
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000 # 10 segundos en OPEN
+        permittedNumberOfCallsInHalfOpenState: 3
+  retry:
+    instances:
+      userService:
+        maxAttempts: 3
+        waitDuration: 1000 # 1 segundo entre reintentos
+
+# ============================================
+# OBSERVABILIDAD - Módulo 5 Sesión 1
 # ============================================
 management:
   endpoints:
@@ -102,12 +121,6 @@ management:
       probes:
         enabled: true
       show-details: when-authorized
-  health:
-    livenessState:
-      enabled: true
-    readinessState:
-      enabled: true
-
   # Métricas Prometheus
   prometheus:
     metrics:
@@ -116,8 +129,9 @@ management:
   # Trazas distribuidas
   tracing:
     sampling:
-      probability: 1.0 # 1.0 = 100% de trazas (solo para desarrollo)
-      # En producción usar 0.1 (10%)
+      probability:
+        1.0 # 1.0 = 100% de trazas (solo para desarrollo)
+        # En producción usar 0.1 (10%)
   # Tags comunes en todas las métricas
   metrics:
     tags:

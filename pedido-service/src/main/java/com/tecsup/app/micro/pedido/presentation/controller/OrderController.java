@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,15 +40,31 @@ public class OrderController {
     return ResponseEntity.ok(orders);
   }
 
+  @GetMapping("/{id}")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
+    log.info("REST request to get order by id: {}", id);
+    Order order = orderApplicationService.getOrderById(id);
+    return order != null ? ResponseEntity.ok(order) : ResponseEntity.notFound().build();
+  }
+
   @PostMapping
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Order> createOrder(
       @RequestBody CreateOrderRequest order,
-      @RequestHeader("Authorization") String authorizationHeader) {
+      @RequestHeader("Authorization") String authHeader) {
     log.info("REST request to create order: {}", order);
-    log.info("Authorization header: {}", authorizationHeader);
+    log.info("Authorization header: {}", authHeader);
+
+    // Extraer JWT del header
+    String jwtToken = null;
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      jwtToken = authHeader.substring(7);
+    } else {
+      log.warn("No Authorization header with Bearer token found for catalog retrieval");
+    }
     Order orderDomain = orderDtoMapper.toDomain(order);
-    Order createdOrder = orderApplicationService.createOrder(orderDomain, authorizationHeader);
+    Order createdOrder = orderApplicationService.createOrder(orderDomain, jwtToken);
     return ResponseEntity.ok(createdOrder);
   }
 

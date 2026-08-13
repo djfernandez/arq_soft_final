@@ -62,13 +62,13 @@ public class CatalogApplicationService {
     }
 
     @Transactional
-    public Catalog createCatalog(Catalog product) {
-        return createCatalogUseCase.execute(product);
+    public Catalog createCatalog(Catalog catalog, String jwtToken) {
+        return createCatalogUseCase.execute(catalog, jwtToken);
     }
 
     @Transactional
-    public Catalog updateCatalog(Long id, Catalog product) {
-        return updateCatalogUseCase.execute(id, product);
+    public Catalog updateCatalog(Long id, Catalog catalog) {
+        return updateCatalogUseCase.execute(id, catalog);
     }
 
     @Transactional

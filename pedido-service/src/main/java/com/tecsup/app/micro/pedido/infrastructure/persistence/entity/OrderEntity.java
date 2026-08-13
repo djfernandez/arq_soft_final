@@ -34,15 +34,18 @@ public class OrderEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "restaurant_id", nullable = false)
-  private RestaurantEntity restaurant;
+  // @ManyToOne(fetch = FetchType.LAZY)
+  // @JoinColumn(name = "restaurant_id", nullable = false)
+  // private RestaurantEntity restaurant;
 
   @Column(name = "order_number", nullable = false, unique = true, length = 50)
   private String orderNumber;
 
   @Column(name = "user_id", nullable = false)
   private Long userId;
+
+  @Column(name = "restaurant_id", nullable = false)
+  private Long restaurantId;
 
   @Column(name = "status", nullable = false)
   private String status;

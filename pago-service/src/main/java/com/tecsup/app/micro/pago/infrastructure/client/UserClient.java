@@ -56,8 +56,8 @@ public class UserClient {
      *                  abre el circuito por 10 segundos
      * @Retry: Reintenta hasta 3 veces con 1 segundo entre intentos
      */
-    @CircuitBreaker(name = "userService")
-    @Retry(name = "userService", fallbackMethod = "getUserFallback")
+    @CircuitBreaker(name = "pagoService")
+    @Retry(name = "pagoService", fallbackMethod = "getUserFallback")
     public User getUserById(Long userId, String jwtToken) {
         log.info("Calling User Service (PostgreSQL userdb) to get user with id: {}", userId);
 

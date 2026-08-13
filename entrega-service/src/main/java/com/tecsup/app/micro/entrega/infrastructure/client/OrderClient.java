@@ -1,4 +1,4 @@
-package com.tecsup.app.micro.pago.infrastructure.client;
+package com.tecsup.app.micro.entrega.infrastructure.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.tecsup.app.micro.pago.domain.model.Order;
-import com.tecsup.app.micro.pago.infrastructure.client.dto.OrderDTO;
-import com.tecsup.app.micro.pago.infrastructure.client.mapper.OrderDtoMapper;
+import com.tecsup.app.micro.entrega.domain.model.Order;
+import com.tecsup.app.micro.entrega.infrastructure.client.dto.OrderDTO;
+import com.tecsup.app.micro.entrega.infrastructure.client.mapper.OrderDtoMapper;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -40,8 +40,8 @@ public class OrderClient {
    *                  abre el circuito por 10 segundos
    * @Retry: Reintenta hasta 3 veces con 1 segundo entre intentos
    */
-  @CircuitBreaker(name = "pedidoService")
-  @Retry(name = "pedidoService", fallbackMethod = "getOrderFallback")
+  @CircuitBreaker(name = "entregaService")
+  @Retry(name = "entregaService", fallbackMethod = "getOrderFallback")
   public Order getOrderById(Long orderId, String jwtToken) {
     log.info("Calling Order Service (PostgreSQL orderdb) to get order with id: {}", orderId);
 

@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 
 import com.tecsup.app.micro.pedido.domain.exception.InvalidOrderDataException;
 import com.tecsup.app.micro.pedido.domain.model.Restaurant;
+import com.tecsup.app.micro.pedido.domain.model.User;
 import com.tecsup.app.micro.pedido.domain.repository.RestaurantRepository;
 import com.tecsup.app.micro.pedido.infrastructure.client.UserClient;
-import com.tecsup.app.micro.pedido.infrastructure.client.dto.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ public class CreateRestaurantsUseCase {
     if (!restaurant.isValid()) {
       throw new IllegalArgumentException("Invalid restaurant data. Name, description, and userId are required.");
     }
-    UserDTO userDTO = userClient.getUserById(restaurant.getUserId(), token);
-    if (userDTO == null || userDTO.getId() == null) {
+    User user = userClient.getUserById(restaurant.getUserId(), token);
+    if (user == null || user.getId() == null) {
       throw new InvalidOrderDataException("User with ID " + restaurant.getUserId() + " does not exist.");
     }
     Restaurant savedRestaurant = restaurantRepository.save(restaurant);

@@ -3,6 +3,7 @@ package com.tecsup.app.micro.pago.presentation.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.tecsup.app.micro.pago.domain.model.Payment;
 import com.tecsup.app.micro.pago.presentation.dto.CreatePaymentRequest;
@@ -18,11 +19,15 @@ public interface PaymentDtoMapper {
     /**
      * Convierte CreatePaymentRequest a Payment de dominio
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Payment toDomain(CreatePaymentRequest request);
 
     /**
      * Convierte UpdatePaymentRequest a Payment de dominio
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Payment toDomain(UpdatePaymentRequest request);
 
     /**

@@ -1,7 +1,9 @@
 package com.tecsup.app.micro.pedido.infrastructure.client.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
+import com.tecsup.app.micro.pedido.domain.model.User;
 import com.tecsup.app.micro.pedido.infrastructure.client.dto.UserDTO;
 
 /**
@@ -10,7 +12,9 @@ import com.tecsup.app.micro.pedido.infrastructure.client.dto.UserDTO;
 @Mapper(componentModel = "spring")
 public interface UserDtoMapper {
 
-    UserDTO toDomain(UserDTO dto);
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    User toDomain(UserDTO dto);
 
     // UserResponse toResponse(User user);
 

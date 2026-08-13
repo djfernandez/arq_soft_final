@@ -88,7 +88,7 @@ resilience4j:
         waitDuration: 1000 # 1 segundo entre reintentos
 
 # ============================================
-# ACTUATOR (Para health checks de Kubernetes)
+# OBSERVABILIDAD - Módulo 5 Sesión 1
 # ============================================
 management:
   endpoints:
@@ -100,12 +100,6 @@ management:
       probes:
         enabled: true
       show-details: when-authorized
-  health:
-    livenessState:
-      enabled: true
-    readinessState:
-      enabled: true
-
   # Métricas Prometheus
   prometheus:
     metrics:
@@ -114,8 +108,9 @@ management:
   # Trazas distribuidas
   tracing:
     sampling:
-      probability: 1.0 # 1.0 = 100% de trazas (solo para desarrollo)
-      # En producción usar 0.1 (10%)
+      probability:
+        1.0 # 1.0 = 100% de trazas (solo para desarrollo)
+        # En producción usar 0.1 (10%)
   # Tags comunes en todas las métricas
   metrics:
     tags:

@@ -1,4 +1,4 @@
-package com.tecsup.app.micro.pago.infrastructure.client;
+package com.tecsup.app.micro.entrega.infrastructure.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.tecsup.app.micro.pago.domain.model.Order;
-import com.tecsup.app.micro.pago.infrastructure.client.dto.OrderDTO;
-import com.tecsup.app.micro.pago.infrastructure.client.mapper.OrderDtoMapper;
+import com.tecsup.app.micro.entrega.domain.model.Payment;
+import com.tecsup.app.micro.entrega.infrastructure.client.dto.PaymentDTO;
+import com.tecsup.app.micro.entrega.infrastructure.client.mapper.PaymentDtoMapper;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -21,18 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OrderClient {
+public class PaymentClient {
   private final RestTemplate restTemplate;
-  private final OrderDtoMapper orderDTOMapper;
+  private final PaymentDtoMapper paymentDTOMapper;
 
-  @Value("${order.service.url}")
-  private String orderServiceUrl;
+  @Value("${payment.service.url}")
+  private String paymentServiceUrl;
 
   /**
-   * Obtiene un pedido por ID desde order-service
+   * Obtiene un pago por ID desde payment-service
    *
-   * @param orderId  ID del pedido a buscar
-   * @param jwtToken Token JWT para autenticación (Sesión 2)
+   * @param paymentId ID del pago a buscar
+   * @param jwtToken  Token JWT para autenticación (Sesión 2)
    * @return Order del dominio
    *
    *         Anotaciones Resilience4j (Sesión 3):
@@ -40,12 +40,12 @@ public class OrderClient {
    *                  abre el circuito por 10 segundos
    * @Retry: Reintenta hasta 3 veces con 1 segundo entre intentos
    */
-  @CircuitBreaker(name = "pedidoService")
-  @Retry(name = "pedidoService", fallbackMethod = "getOrderFallback")
-  public Order getOrderById(Long orderId, String jwtToken) {
-    log.info("Calling Order Service (PostgreSQL orderdb) to get order with id: {}", orderId);
+  @CircuitBreaker(name = "entregaService")
+  @Retry(name = "entregaService", fallbackMethod = "getOrderFallback")
+  public Payment getPaymentById(Long paymentId, String jwtToken) {
+    log.info("Calling Payment Service (PostgreSQL paymentdb) to get order with id: {}", paymentId);
 
-    String url = this.orderServiceUrl + "/api/orders/" + orderId;
+    String url = this.paymentServiceUrl + "/api/payments/" + paymentId;
 
     // =============================================
     // Sesión 2: Propagar JWT en el header
@@ -69,14 +69,14 @@ public class OrderClient {
       // log.info("User retrieved successfully from userdb: {}", user);
       // return userDTOMapper.toDomain(user);
 
-      ResponseEntity<OrderDTO> response = restTemplate.exchange(
-          url, HttpMethod.GET, entity, OrderDTO.class);
-      log.info("Order retrieved successfully from order-service: {}", response.getBody());
-      return orderDTOMapper.toDomain(response.getBody());
+      ResponseEntity<PaymentDTO> response = restTemplate.exchange(
+          url, HttpMethod.GET, entity, PaymentDTO.class);
+      log.info("Payment retrieved successfully from payment-service: {}", response.getBody());
+      return paymentDTOMapper.toDomain(response.getBody());
 
     } catch (Exception e) {
-      log.error("Error calling Order Service: {}", e.getMessage());
-      throw new RuntimeException("Error calling Order Service: " + e.getMessage());
+      log.error("Error calling Payment Service: {}", e.getMessage());
+      throw new RuntimeException("Error calling Payment Service: " + e.getMessage());
     }
   }
 
@@ -84,27 +84,26 @@ public class OrderClient {
    * Metodo de versión anterior (sin JWT) - mantener para compatibilidad
    * Se puede eliminar una vez que JWT esté completamente implementado
    */
-  public Order getOrderById(Long orderId) {
-    return getOrderById(orderId, null);
+  public Payment getPaymentById(Long paymentId) {
+    return getPaymentById(paymentId, null);
   }
 
   /**
-   * Fallback cuando order-service no está disponible (Sesión 3)
+   * Fallback cuando payment-service no está disponible (Sesión 3)
    *
    * Se ejecuta cuando:
    * - El Circuit Breaker está abierto
    * - Se agotaron los reintentos del Retry
-   * - order-service no responde o retorna error
+   * - payment-service no responde o retorna error
    *
    * @return Order con datos parciales (indica que el servicio no está disponible)
    */
-  public Order getOrderFallback(Long orderId, String jwtToken, Throwable throwable) {
-    log.warn("FALLBACK: Order Service no disponible para orderId: {}. Razón: {}",
-        orderId, throwable.getMessage());
+  public Payment getPaymentFallback(Long paymentId, String jwtToken, Throwable throwable) {
+    log.warn("FALLBACK: Payment Service no disponible para paymentId: {}. Razón: {}",
+        paymentId, throwable.getMessage());
 
-    return Order.builder()
-        .id(orderId)
-        .orderNumber("Orden no disponible")
+    return Payment.builder()
+        .id(paymentId)
         .status("N/A")
         .build();
   }

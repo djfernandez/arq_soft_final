@@ -51,7 +51,7 @@ public class KafkaConfig {
     configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-    configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
+    configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
     return new DefaultKafkaProducerFactory<>(configProps);
   }
 
@@ -69,12 +69,13 @@ public class KafkaConfig {
     configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "payment-notifications-group");
     configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-    configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-    configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+    configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "com.tecsup.app.micro.pago.*");
+    configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+    configProps.put(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false);
     return new DefaultKafkaConsumerFactory<>(
         configProps,
         new StringDeserializer(),
-        new JsonDeserializer<>(DomainEvent.class, false));
+        new JsonDeserializer<>(DomainEvent.class));
   }
 
   @Bean(name = "kafkaListenerContainerFactory")

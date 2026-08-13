@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tecsup.app.micro.pedido.application.usecase.CreateOrdersUseCase;
 import com.tecsup.app.micro.pedido.application.usecase.GetAllOrdersUseCase;
 import com.tecsup.app.micro.pedido.application.usecase.GetMaxOrdersUseCase;
+import com.tecsup.app.micro.pedido.application.usecase.GetOrderByIdUseCase;
 import com.tecsup.app.micro.pedido.domain.model.Order;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class OrderApplicationService {
 
   private final CreateOrdersUseCase createOrderUseCase;
   private final GetAllOrdersUseCase getAllOrdersUseCase;
+  private final GetOrderByIdUseCase getOrderByIdUseCase;
   private final GetMaxOrdersUseCase getMaxOrdersUseCase;
 
   @Transactional
@@ -30,6 +32,11 @@ public class OrderApplicationService {
   @Transactional(readOnly = true)
   public List<Order> getAllOrders() {
     return getAllOrdersUseCase.execute();
+  }
+
+  @Transactional(readOnly = true)
+  public Order getOrderById(Long id) {
+    return getOrderByIdUseCase.execute(id);
   }
 
   @Transactional(readOnly = true)

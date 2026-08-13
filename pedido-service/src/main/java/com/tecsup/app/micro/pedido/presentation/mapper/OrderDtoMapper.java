@@ -13,6 +13,7 @@ public interface OrderDtoMapper {
   @Mapping(target = "orderNumber", ignore = true)
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "totalAmount", ignore = true)
+  @Mapping(target = "restaurantId", source = "restaurantId")
   Order toDomain(CreateOrderRequest createOrderRequest);
 
 }

@@ -36,7 +36,8 @@ public class Catalog {
     public boolean isValid() {
         return name != null && !name.trim().isEmpty()
                 && price != null && price.compareTo(BigDecimal.ZERO) >= 0
-                && stock != null && stock >= 0;
+                && stock != null && stock >= 0
+                && createdBy != null && createdBy > 0;
     }
 
     /**

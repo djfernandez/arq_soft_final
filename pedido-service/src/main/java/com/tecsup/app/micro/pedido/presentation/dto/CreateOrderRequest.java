@@ -2,8 +2,6 @@ package com.tecsup.app.micro.pedido.presentation.dto;
 
 import java.util.List;
 
-import com.tecsup.app.micro.pedido.domain.model.OrderItem;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -21,6 +19,10 @@ public class CreateOrderRequest {
   @Positive(message = "UserId must be positive")
   private Long userId;
 
+  @NotNull(message = "RestaurantId is required")
+  @Positive(message = "RestaurantId must be positive")
+  private Long restaurantId;
+
   @NotNull(message = "Items are required")
-  private List<OrderItem> items;
+  private List<CreateOrderItemRequest> items;
 }
